@@ -31,8 +31,12 @@ public class ChannelEditor {
 		this.doc = doc;
 	}
 	
-	public void setChannel(String channel){
-		mChannelValue = channel;
+	public void setChannelName(String channelName){
+		mChannelName = channelName;
+	}
+	
+	public void setChannel(String channelValue){
+		mChannelValue = channelValue;
 	}
 	
 	//First add resource and get mapping ids

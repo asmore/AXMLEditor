@@ -16,7 +16,7 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		try{
-			Args arg = Args.parseArgs(args);
+			Args arg = Args.parseTuiTuiArgs(args);
 		
 			if(arg == null){
 				System.err.println("Usage:");
@@ -24,7 +24,10 @@ public class Main {
 				System.exit(0);
 			}
 			
-			cloneAXML(new File(arg.mAXML), arg.mDir, arg.mChannels);
+			//cloneAXML(new File(arg.mAXML), arg.mDir, arg.mChannels);
+			
+			cloneAXML(new File(arg.mAXML), arg.mDir, arg.mMetaKey,arg.mMetaValue);
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -50,10 +53,33 @@ public class Main {
 		}	
 	}
 	
+	private static void cloneAXML(File axml, String dir, String channel,String chanValue) throws Exception{
+		if(dir != null){
+			File f = new File(dir);
+			if(f.isFile() || !f.exists()){
+				f.mkdirs();
+			}
+		}
+		
+		AXMLDoc doc = new AXMLDoc();
+		doc.parse(new FileInputStream(axml));
+		
+		ChannelEditor editor = new ChannelEditor(doc);
+		
+		editor.setChannelName(channel);
+		editor.setChannel(chanValue);
+		editor.commit();
+		doc.build(new FileOutputStream(new File(dir,String.format("axml_%s.xml", chanValue))));
+		
+	}
+	
 	static class Args {
 		public String mAXML;
 		public String mDir;
 		public String[] mChannels;
+		
+		public String mMetaKey;
+		public String mMetaValue;
 		
 		public static Args parseArgs(String[] args){
 			Args arg = new Args();
@@ -80,5 +106,28 @@ public class Main {
 			arg.mChannels = chans;
 			return arg;
 		}
+		
+		public static Args parseTuiTuiArgs(String[] args){
+			Args arg = new Args();
+			
+			if(args == null || args.length < 4){
+				return null;
+			}
+			
+			arg.mAXML = args[0];
+			int chanIndex = 1;
+			if(args[1].equals("-dir")){
+				if(args.length < 4){
+					return null;
+				}
+				arg.mDir = args[2];
+				chanIndex = 3;
+			}
+
+			arg.mMetaKey = args[3];
+			arg.mMetaValue = args[4];
+			
+			return arg;
+		}		
 	}
 }
