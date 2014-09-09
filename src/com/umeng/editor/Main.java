@@ -16,7 +16,7 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		try{
-			Args arg = Args.parseTuiTuiArgs(args);
+			Args arg = Args.parseMetaArgs(args);
 		
 			if(arg == null){
 				System.err.println("Usage:");
@@ -107,7 +107,7 @@ public class Main {
 			return arg;
 		}
 		
-		public static Args parseTuiTuiArgs(String[] args){
+		public static Args parseMetaArgs(String[] args){
 			Args arg = new Args();
 			
 			if(args == null || args.length < 4){
